@@ -1,0 +1,47 @@
+{
+  "scan_metadata": {
+    "module_type": "DAST",
+    "tool_name": "OWASP-ZAP",
+    "tool_version": "2.14.0",
+    "target": "https://hospital.example.com",
+    "timestamp": "2026-09-27T12:30:00Z"
+  },
+  "findings": [
+    {
+      "fingerprint": "c3d4e5f6a1b20203040506070809101112131415161718192021222324252628",
+      "rule_id": "zap.40018.sqli",
+      "title": "SQL Injection in Authentication Endpoint",
+      "description": "SQL injection vulnerability confirmed via time-based and error-based payloads on username field.",
+      "severity": "CRITICAL",
+      "cwe_id": 89,
+      "cve_id": null,
+      "location": {
+        "path_or_url": "https://hospital.example.com/api/v1/auth/login",
+        "start_line": null,
+        "parameter": "username"
+      },
+      "metadata": {
+        "cvss_score": 9.8,
+        "fix_recommendation": "Sanitize user inputs and employ prepared statements."
+      }
+    },
+    {
+      "fingerprint": "d4e5f6a1b2c30203040506070809101112131415161718192021222324252629",
+      "rule_id": "zap.10038.csp_missing",
+      "title": "Content Security Policy (CSP) Header Not Set",
+      "description": "The Content-Security-Policy response header is missing, increasing vulnerability to XSS attacks.",
+      "severity": "MEDIUM",
+      "cwe_id": 16,
+      "cve_id": null,
+      "location": {
+        "path_or_url": "https://hospital.example.com/",
+        "start_line": null,
+        "parameter": null
+      },
+      "metadata": {
+        "cvss_score": 5.3,
+        "fix_recommendation": "Configure a robust Content-Security-Policy HTTP header."
+      }
+    }
+  ]
+}

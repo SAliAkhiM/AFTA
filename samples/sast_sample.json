@@ -1,0 +1,47 @@
+{
+  "scan_metadata": {
+    "module_type": "SAST",
+    "tool_name": "Semgrep + Bandit + Gitleaks",
+    "tool_version": "1.0.0",
+    "target": "https://github.com/example/hospital-portal",
+    "timestamp": "2026-09-27T12:00:00Z"
+  },
+  "findings": [
+    {
+      "fingerprint": "a1b2c3d4e5f60102030405060708091011121314151617181920212223242526",
+      "rule_id": "python.bandit.sql_injection",
+      "title": "Possible SQL Injection in User Login Handler",
+      "description": "User input directly formatted into raw SQL query without parameterized cursor execution.",
+      "severity": "HIGH",
+      "cwe_id": 89,
+      "cve_id": null,
+      "location": {
+        "path_or_url": "src/controllers/auth_controller.py",
+        "start_line": 42,
+        "parameter": "username"
+      },
+      "metadata": {
+        "cvss_score": 8.5,
+        "fix_recommendation": "Use parameterized queries or ORM models instead of string concatenation."
+      }
+    },
+    {
+      "fingerprint": "b2c3d4e5f6a10203040506070809101112131415161718192021222324252627",
+      "rule_id": "gitleaks.generic-api-key",
+      "title": "Hardcoded JWT Secret Key",
+      "description": "Hardcoded secret key string detected in source code.",
+      "severity": "CRITICAL",
+      "cwe_id": 798,
+      "cve_id": null,
+      "location": {
+        "path_or_url": "src/config/jwt_secret.py",
+        "start_line": 15,
+        "parameter": "JWT_SECRET"
+      },
+      "metadata": {
+        "cvss_score": 9.1,
+        "fix_recommendation": "Store secrets in environment variables or a secure key management vault."
+      }
+    }
+  ]
+}

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>گزارش ممیزی امنیتی و ارزیابی انطباق افتا</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #3b82f6;
+      --bg-main: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      
+      --critical: #dc2626;
+      --critical-bg: #fef2f2;
+      --high: #ea580c;
+      --high-bg: #fff7ed;
+      --medium: #d97706;
+      --medium-bg: #fffbeb;
+      --low: #2563eb;
+      --low-bg: #eff6ff;
+      --pass: #16a34a;
+      --pass-bg: #f0fdf4;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+      color: #ffffff;
+      padding: 2.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .header-title h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .header-title p {
+      color: #cbd5e1;
+      font-size: 0.95rem;
+    }
+
+    .verdict-badge {
+      padding: 0.75rem 1.5rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .verdict-FAILED {
+      background-color: var(--critical);
+      color: #ffffff;
+    }
+
+    .verdict-CONDITIONAL {
+      background-color: var(--medium);
+      color: #ffffff;
+    }
+
+    .verdict-PASSED {
+      background-color: var(--pass);
+      color: #ffffff;
+    }
+
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .metric-card {
+      background: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      text-align: center;
+    }
+
+    .metric-card .value {
+      font-size: 2.25rem;
+      font-weight: 800;
+      margin-bottom: 0.25rem;
+    }
+
+    .metric-card .label {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    /* Section Styling */
+    .section {
+      background: var(--card-bg);
+      border-radius: 0.75rem;
+      border: 1px solid var(--border-color);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 0.85rem 1rem;
+      text-align: right;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    th {
+      background-color: #f1f5f9;
+      color: #334155;
+      font-weight: 700;
+    }
+
+    tr:hover {
+      background-color: #f8fafc;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.65rem;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-PASS { background-color: var(--pass-bg); color: var(--pass); border: 1px solid var(--pass); }
+    .badge-FAIL { background-color: var(--critical-bg); color: var(--critical); border: 1px solid var(--critical); }
+    .badge-WARNING { background-color: var(--medium-bg); color: var(--medium); border: 1px solid var(--medium); }
+
+    .badge-CRITICAL { background-color: var(--critical-bg); color: var(--critical); }
+    .badge-HIGH { background-color: var(--high-bg); color: var(--high); }
+    .badge-MEDIUM { background-color: var(--medium-bg); color: var(--medium); }
+    .badge-LOW { background-color: var(--low-bg); color: var(--low); }
+
+    .cross-verified-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-right: 4px solid var(--primary-light);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .code-snippet {
+      direction: ltr;
+      text-align: left;
+      background: #0f172a;
+      color: #38bdf8;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.375rem;
+      font-family: Consolas, monospace;
+      font-size: 0.85rem;
+      display: inline-block;
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        background: white;
+      }
+      .header {
+        border-radius: 0;
+      }
+      .section {
+        box-shadow: none;
+        border: 1px solid #ccc;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-title">
+        <h1>سامانه ارزیابی امنیتی و صدور انطباق افتا</h1>
+        <p>گزارش تجمیعی نتایج تحلیل ایستا (SAST)، تحلیل پویا (DAST) و وابستگی‌ها (SCA)</p>
+        <p style="margin-top: 0.35rem; font-size: 0.85rem; color: #94a3b8;">
+          شناسه هدف: <strong>{{ target_name }}</strong> | تاریخ صدور: <strong>{{ report_date }}</strong>
+        </p>
+      </div>
+      <div>
+        <div class="verdict-badge verdict-{{ compliance.verdict_code }}">
+          {{ compliance.verdict }}
+        </div>
+      </div>
+    </header>
+
+    <!-- Metrics -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="value" style="color: var(--primary);">{{ compliance.compliance_score }}%</div>
+        <div class="label">درصد انطباق الزامات افتا</div>
+      </div>
+      <div class="metric-card">
+        <div class="value" style="color: var(--critical);">{{ compliance.severity_summary.CRITICAL }}</div>
+        <div class="label">آسیب‌پذیری‌های بحرانی</div>
+      </div>
+      <div class="metric-card">
+        <div class="value" style="color: var(--high);">{{ compliance.severity_summary.HIGH }}</div>
+        <div class="label">آسیب‌پذیری‌های بالا</div>
+      </div>
+      <div class="metric-card">
+        <div class="value" style="color: var(--medium);">{{ compliance.severity_summary.MEDIUM }}</div>
+        <div class="label">آسیب‌پذیری‌های متوسط</div>
+      </div>
+      <div class="metric-card">
+        <div class="value" style="color: var(--pass);">{{ compliance.passed_controls }} / {{ compliance.total_controls }}</div>
+        <div class="label">الزامات امنیتی پاس شده</div>
+      </div>
+    </div>
+
+    <!-- Section 1: AFTA Compliance Scorecard -->
+    <div class="section">
+      <h2 class="section-title">۱. کارنامه انطباق الزامات امنیتی افتا (Compliance Scorecard)</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+        بررسی وضعیت سامانه‌های کاربردی در برابر چک‌لیست رسمی الزامات امنیتی فضای تبادل اطلاعات (افتا):
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>کد الزام</th>
+            <th>حوزه امنیتی</th>
+            <th>عنوان الزام</th>
+            <th>سطح اهمیت</th>
+            <th>وضعیت ممیزی</th>
+            <th>تعداد تخلفات</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cid, data in compliance.controls_detail.items() %}
+          <tr>
+            <td><strong>{{ cid }}</strong></td>
+            <td>{{ data.control.domain }}</td>
+            <td>{{ data.control.title }}</td>
+            <td><span class="badge badge-{{ data.control.severity_impact }}">{{ data.control.severity_impact }}</span></td>
+            <td>
+              <span class="badge badge-{{ data.status }}">
+                {% if data.status == 'PASS' %}قبول{% elif data.status == 'FAIL' %}مردود{% else %}هشدار{% endif %}
+              </span>
+            </td>
+            <td>{{ data.violations|length }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Section 2: Cross-Verified Findings -->
+    {% if cross_verified_count > 0 %}
+    <div class="section">
+      <h2 class="section-title">۲. آسیب‌پذیری‌های دارای تأیید متقابل دوگانه (Cross-Verified Findings)</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+        این آسیب‌پذیری‌ها هم در تحلیل ایستای سورس‌کد (SAST) و هم به صورت عملیاتی در آزمون نفوذ پویا (DAST) ردیابی و اثبات گردیده‌اند:
+      </p>
+      {% for item in correlated_findings %}
+        {% if item.is_cross_verified %}
+        <div class="cross-verified-box">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <strong>{{ item.finding.title }}</strong>
+            <span class="badge badge-{{ item.finding.severity.value }}">{{ item.finding.severity.value }}</span>
+          </div>
+          <p style="font-size: 0.875rem; color: #1e293b; margin-bottom: 0.5rem;">{{ item.cross_verification_note }}</p>
+          <div class="code-snippet">{{ item.finding.location.path_or_url }}</div>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Section 3: Detailed Findings -->
+    <div class="section">
+      <h2 class="section-title">۳. فهرست تفصیلی کلیه آسیب‌پذیری‌ها و شواهد</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>شدت</th>
+            <th>عنوان آسیب‌پذیری</th>
+            <th>منبع کشف</th>
+            <th>موقعیت / فایل / پکیج</th>
+            <th>شناسه CWE / CVE</th>
+            <th>راهکار اصلاحی</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in correlated_findings %}
+          <tr>
+            <td><span class="badge badge-{{ item.finding.severity.value }}">{{ item.finding.severity.value }}</span></td>
+            <td>
+              <strong>{{ item.finding.title }}</strong>
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">
+                {{ item.finding.description[:120] }}{% if item.finding.description|length > 120 %}...{% endif %}
+              </div>
+            </td>
+            <td>
+              {% for src in item.sources %}
+                <span class="badge" style="background:#e0e7ff; color:#3730a3;">{{ src }}</span>
+              {% endfor %}
+            </td>
+            <td>
+              <div class="code-snippet">{{ item.finding.location.path_or_url }}</div>
+              {% if item.finding.location.start_line %}
+              <div style="font-size: 0.75rem; color: var(--text-muted);">خط: {{ item.finding.location.start_line }}</div>
+              {% endif %}
+            </td>
+            <td>
+              {% if item.finding.cve_id %}<div style="font-weight:600; color:#b91c1c;">{{ item.finding.cve_id }}</div>{% endif %}
+              {% if item.finding.cwe_id %}<div style="font-size:0.8rem; color:#475569;">CWE-{{ item.finding.cwe_id }}</div>{% endif %}
+            </td>
+            <td style="font-size: 0.85rem; color: #047857;">
+              {{ item.finding.metadata.fix_recommendation or 'اصلاح سورس‌کد و اعتبارسنجی ورودی طبق استانداردهای امنیتی' }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>
